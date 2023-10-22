@@ -1,15 +1,22 @@
-FROM python:3.9.18-alpine3.18
+FROM ubuntu:latest
+# FROM python:3.12.0-alpine3.18
 
-WORKDIR /
+RUN apt update
+RUN apt install -y python3 unzip
+RUN apt install -y python3-venv
+
+COPY models.zip .
+RUN unzip models.zip
+
+RUN apt install -y python3-pip
+
+WORKDIR /app
 
 COPY requirements.txt .
-COPY models.zip .
-RUN python -m venv .venv
-RUN source .venv/bin/activate
+RUN python3 -m venv .venv
 RUN pip install -r requirements.txt
-RUN unzip models.zip
 
 COPY . .
 
 EXPOSE 3001
-CMD [ "python", "app.py" ]
+CMD [ "python3", "app.py" ]
